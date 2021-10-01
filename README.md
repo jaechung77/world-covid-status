@@ -7,7 +7,7 @@ It is to scrape data from "https://www.worldometers.info/coronavirus/"
 It searches the corresponding table from the end point and scrapes table id `main_table_countries_today`
 
 ## World-Covid-Status CLI Structure
-
+```
 ├── bin
 │   ├── console
 │   ├── setup
@@ -22,6 +22,7 @@ It searches the corresponding table from the end point and scrapes table id `mai
 │   │   └── util.rb
 │   └── world_covid_status.rb
 └── README.md
+```
 
 ## How to execute the CLI
 Type `ruby bin/world-covid-status` on bash terminal. 
