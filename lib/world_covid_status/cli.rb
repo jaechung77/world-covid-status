@@ -10,9 +10,13 @@ class WorldCovidStatus::CLI
     def start
         util = WorldCovidStatus::Util
         puts ""
-        puts "From what ranking of countries would you like to see? Only 1 to 50 will be accepted!"
-        input = gets.strip.to_i
-
+        puts "From what ranking of countries would you like to see?"
+        puts "The ranking will be displayed starting from the input number."
+        puts "For example, if you type 13, ranking 13 to 22 will be displayed."
+        puts "You can quit this app by Q/q anytime."
+        input = gets.strip
+        check_quit(input)
+        input = input.to_i
         check_error(input)
         print_countries(input)
         more_info
@@ -21,19 +25,22 @@ class WorldCovidStatus::CLI
     def more_info
         puts ""
         puts "What number of country would you like more information on? Only 1 to 50 will be accepted!"
-        input = gets.strip.to_i
+        puts "You can quit this app by Q/q anytime."
+        input = gets.strip
+        check_quit(input)
+        input = input.to_i
         check_error(input)    
         country = WorldCovidStatus::Country.find(input.to_i)
 
         print_moreinfo(country)
 
         puts ""
-        puts "Would you like to see another country? Enter Y or N"
+        puts "Would you like to see another country? Enter Y/y or N/n"
     
         input = gets.strip.downcase
         if input == "y"
           start
-        elsif input == "n"
+        elsif input == "n" || input == "q"
           puts ""
           puts "Thank you! Have a great day!"
           exit
@@ -71,18 +78,28 @@ class WorldCovidStatus::CLI
       puts  "" 
     end   
 
-    def check_error(input)  
+    def check_error(input)
       util = WorldCovidStatus::Util 
       caller_method = caller[0][/`([^']*)'/, 1]     
       if input < 1 || input > 51 
-        puts util.font_color("Your input is not valid", 'red')
+        puts util.font_color("Your input is not valid!!!", 'red')
         if caller_method == "start"
           start
         elsif caller_method == "more_info"  
           more_info
         else
+          puts ""
+          puts "Thank you! Have a great day!"
           exit
-        end    
+        end       
+      end  
+    end  
+
+    def check_quit(input)
+      if input.downcase == 'q'
+        puts ""
+        puts "Thank you! Have a great day!"
+        exit
       end  
     end  
 end    

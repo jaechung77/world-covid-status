@@ -39,6 +39,9 @@ In `cli.rb`, it handles exception by user's input. It accepts only integer betwe
 ### Change font color in bash CLI
 You can find `def font_color`, which sets font color to yellow, red and blue.
 
+### Check caller function
+When you need to check caller method, you can compare caller name with caller[0][/`([^']*)'/, 1]  
+
 
 
 
