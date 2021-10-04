@@ -9,8 +9,8 @@ class WorldCovidStatus::Util
       
     def self.right_align(str)
         leading_space = ""
-        if str.length < 10
-            (10-str.length).times{leading_space << " "}
+        if str.length < 14
+            (14-str.length).times{leading_space << " "}
         end
         indented_str = leading_space + str
     end 
@@ -28,5 +28,13 @@ class WorldCovidStatus::Util
         end    
         str =  prefix + str.to_s + suffix   
     end   
-    
+
+    def self.format_number(number)
+        if number == 0
+           return number = "N/A"
+        else    
+            num_groups = number.to_s.chars.to_a.reverse.each_slice(3)
+            return num_groups.map(&:join).join(',').reverse
+        end    
+    end
 end    
