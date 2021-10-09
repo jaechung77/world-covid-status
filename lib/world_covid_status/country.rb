@@ -1,13 +1,12 @@
 class WorldCovidStatus::Country
 
     attr_accessor :name, :ttl_cases, :new_cases, :active_cases, :ttl_cases_per_mil, :population, :id
-    @@all = []
-    @@found = []
+
     def initialize(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population, id=nil)
         @id = id
         @name  = name
         @ttl_cases  = ttl_cases
-        new_cases == "" ? @new_cases = 0 :  @new_cases  = new_cases      
+        new_cases == "" ? @new_cases = 0 :  @new_cases  = new_cases
         @active_cases  = active_cases
         @ttl_cases_per_mil = ttl_cases_per_mil
         @population = population
@@ -25,57 +24,47 @@ class WorldCovidStatus::Country
                     "population" INTEGER
                 )
                 SQL
-        DB[:conn].execute(sql)        
-    end  
-    
+        DB[:conn].execute(sql)
+    end
+
     def self.drop_table
         sql = <<-SQL
               DROP TABLE IF EXISTS countries
               SQL
-        DB[:conn].execute(sql)      
-    end 
+        DB[:conn].execute(sql)
+    end
+
+    def self.table_exist?
+        sql =   <<-SQL
+                SELECT count(*) FROM sqlite_master
+                WHERE type='table' AND name='{countries}'
+                SQL
+        DB[:conn].execute(sql)
+    end
 
     def save
-        # if self.id
-        #     self.update
-        # else    
             sql =   <<-SQL
                     INSERT INTO countries (
                     "name", ttl_cases, new_cases, active_cases,
                     ttl_cases_per_mil, "population")
                     values (?, ?, ?, ?, ?, ?)
                     SQL
-            DB[:conn].execute(sql, self.name, self.ttl_cases, self.new_cases, 
-                            self.active_cases, self.ttl_cases_per_mil, self.population) 
-            @id = DB[:conn].execute("SELECT last_insert_rowid() FROM countries")[0][0]                       
-        # end        
-    end    
+            DB[:conn].execute(sql, self.name, self.ttl_cases, self.new_cases,
+                            self.active_cases, self.ttl_cases_per_mil, self.population)
+            @id = DB[:conn].execute("SELECT last_insert_rowid() FROM countries")[0][0]
+    end
 
     def self.create(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
         country = self.new(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
         country.save
-    end    
+    end
 
     def self.new_from_db(row)
-        country = self.new(row[1], row[2], row[3], row[4], row[5], row[6], row[0])
-        @@all << country
-    end 
-
-    def self.found_from_db(row)
-        country = self.new(row[1], row[2], row[3], row[4], row[5], row[6], row[0])
-        @@found << country
-    end
-    
-    def self.all
-        @@all
-    end
-    
-    def self.found
-        @@found
+        self.new(row[1], row[2], row[3], row[4], row[5], row[6], row[0])
     end
 
     def self.find(id)
-        @@found =[]
+        result = []
         sql = <<-SQL
                 SELECT *
                 FROM countries
@@ -83,25 +72,29 @@ class WorldCovidStatus::Country
                 LIMIT 1
                 SQL
         DB[:conn].execute(sql, id).map do |row|
-            self.found_from_db(row)
+            result << self.new_from_db(row)
         end.first
-    end 
+        result
+    end
 
-    def self.select_rows(start_index, order_by)
-        @@all = []
-        offset = start_index -1  
+    def self.select_rows(start_index, order_by, range)
+        result = []
+        offset = start_index -1
         sql = <<-SQL
                  SELECT *
                  FROM countries
                  ORDER BY #{order_by} DESC
-                 LIMIT 10 OFFSET ?
+                 LIMIT #{range} OFFSET ?
                  SQL
         DB[:conn].execute(sql, offset).map do |row|
-           self.new_from_db(row)
+           result << self.new_from_db(row)
         end
-    end    
+        result
+    end
 
     def infected_rate
-        rate = ((self.ttl_cases.to_f / self.population.to_f) * 100).round(2)
-    end    
-end    
+        ((self.ttl_cases.to_f / self.population.to_f) * 100).round(2)
+    end
+end
+
+

@@ -2,4 +2,4 @@
 
 require_relative '../lib/world_covid_status'
 
-WorldCovidStatus::CLI.new.call
+WorldCovidStatus::CLI.new.start_menu
