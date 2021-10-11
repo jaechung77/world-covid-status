@@ -1,4 +1,4 @@
-class WorldCovidStatus::Util
+module WorldCovidStatus::Util
     def self.left_align(str)
         tailing_space =""
         if str.length < 10 
