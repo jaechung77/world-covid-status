@@ -34,7 +34,7 @@ class WorldCovidStatus::Country
         DB[:conn].execute(sql)
     end
 
-    def self.table_exist?
+    def self.does_table_exist?
         sql =   <<-SQL
                 SELECT count(*) FROM sqlite_master
                 WHERE type='table' AND name='{countries}'
@@ -54,7 +54,7 @@ class WorldCovidStatus::Country
             @id = DB[:conn].execute("SELECT last_insert_rowid() FROM countries")[0][0]
     end
 
-    def self.create(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
+    def self.insert_into_table(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
         country = self.new(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
         country.save
     end
@@ -63,7 +63,7 @@ class WorldCovidStatus::Country
         self.new(row[1], row[2], row[3], row[4], row[5], row[6], row[0])
     end
 
-    def self.find(id)
+    def self.find_country(id)
         result = []
         sql = <<-SQL
                 SELECT *

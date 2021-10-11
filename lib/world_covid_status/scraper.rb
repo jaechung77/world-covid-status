@@ -16,7 +16,7 @@ class WorldCovidStatus::Scraper
                 active_cases  = row.css('td')[8].text.strip.delete(',').to_i
                 ttl_cases_per_mil = row.css('td')[10].text.strip.delete(',').to_i
                 population = row.css('td')[14].text.strip.delete(',').to_i
-                WorldCovidStatus::Country.create(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
+                WorldCovidStatus::Country.insert_into_table(name, ttl_cases, new_cases, active_cases, ttl_cases_per_mil, population)
             end
         end
     end

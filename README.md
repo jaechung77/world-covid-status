@@ -17,15 +17,19 @@ It searches the corresponding table from the end point and scrapes table id `mai
 ├── lib
 │   ├── world_covid_status
 │   │   ├── cli.rb
-│   │   ├── country.rb
+│   │   ├── country_ar.rb
+│   │   ├── country_raw_sql.rb
+│   │   ├── scraper.rb
 │   │   ├── world-covid-status
 │   │   └── util.rb
 │   └── world_covid_status.rb
+├── Gemfile
 └── README.md
 ```
 
 ## How to execute the CLI
 Type `ruby bin/world-covid-status` on bash terminal.
+There are 2 versions. In `environment.rb`, you can select AR version and non-AR version on line 7 and 8.
 
 ## Features
 When the app is running, you can see 10 rows of offset, order by Population, Total cases and Active Cases.
@@ -42,8 +46,9 @@ Then `scraper.rb` initializes `country.rb` that saves data into database and man
 In `cli.rb`, it handles exception by user's input.
 
 ## Areas to be improved
-Even the Worldometer site does not show vaccination data and death status, it will be more useful if the app shows data that previously mentioned.
+1. Even the Worldometer site does not show vaccination data and death status, it will be more useful if the app shows data that previously mentioned.
 Gathering the data will be the main hurdles.
+2. Selecting Versions(AR or Raw SQL) should have been adopted by Command line option.
 
 ## Other Useful Information
 ### Change font color in bash CLI

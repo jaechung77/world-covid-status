@@ -26,7 +26,7 @@ class WorldCovidStatus::CLI
         elsif input == "n"
           puts ""
           puts "Using Previous Data..."
-          if !WorldCovidStatus::Country.table_exist?
+          if !WorldCovidStatus::Country.does_table_exist?
             puts util.font_color("Data does not exist.", "yellow")
             puts ""
             puts "Writing New Data.........."
@@ -173,7 +173,7 @@ class WorldCovidStatus::CLI
 
     def print_country_info(input)
         util = WorldCovidStatus::Util
-        WorldCovidStatus::Country.find(input.to_i).each do |country|
+        WorldCovidStatus::Country.find_country(input.to_i).each do |country|
         puts  ""
         puts  "---------------Description--------------"
         puts  "The population of #{country.name} is #{util.format_number(country.population)}."
